@@ -1,0 +1,26 @@
+# Data-Free Learning of Reduced-Order Kinematics (Sharp et al.)
+# All physical systems (FEM, cloth, rigid bodies, linkages) and the neural
+# subspace maps f_theta: R^d -> R^n are implemented in JAX.
+
+# --- Core: JAX + XLA backend -------------------------------------------------
+# Autodiff (grad / jacfwd / hessian), jit, vmap over latent samples z ~ N(0, I).
+# jax[cpu] pulls in the matching jaxlib. For NVIDIA GPUs, replace with
+# jax[cuda12] (see https://docs.jax.dev/en/latest/installation.html).
+jax[cpu]>=0.4.30
+jaxlib>=0.4.30
+
+# --- Optimization ------------------------------------------------------------
+# Stochastic gradient descent / Adam and LR schedules for fitting theta
+# (Sec. 3.2) and the seed-blend schedule p: 0 -> 1 (Sec. 4.1).
+optax>=0.2.2
+
+# --- Numerical computing -----------------------------------------------------
+numpy>=1.26
+# Generalized eigenproblem M, H(b) for the linear modal analysis baseline
+# (Sec. 3.3 / Sec. 5 comparisons), sparse mass matrices, subspace-simulation
+# solves (Sec. 3.4).
+scipy>=1.11
+
+# --- Visualisation (experiments) ---------------------------------------------
+# Plots of sampled subspace configurations, e.g. experiments/klann_linkage.py.
+matplotlib>=3.8
