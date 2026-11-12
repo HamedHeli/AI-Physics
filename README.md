@@ -21,7 +21,7 @@ flowchart LR
     end
     subgraph U2["Unit II: learning all the way"]
         NO["06 Neural operators<br/>FNO · Transolver"]
-        TF["07 Transformers<br/>PDE-Transformer"]
+        TF["07 Transformers<br/>PDE-Transformer · WorldParticle"]
     end
     subgraph U3["Unit III: generative AI"]
         REC["08 Reconstructing physics<br/>PAC-NeRF"]
@@ -37,6 +37,7 @@ flowchart LR
     ODE -- "learned time-stepper" --> GNN
     PINN -- "one solution u(x,t) → the whole solution operator" --> NO
     GNN -- "mesh-free message passing → global attention" --> NO
+    GNN -- "learned particle simulator → transformer corrector" --> TF
     NO -- "attention-based operators at scale" --> TF
     DS -- "a trained operator as a differentiable surrogate" --> NO
     GNN -- "edge latents → a dense pair representation" --> GEN
@@ -87,7 +88,8 @@ A useful way to read the graph is to ask, for each paper, *what function the net
 - **A low-dimensional manifold of solutions** (03): a decoder maps a few latent coordinates to a full field or
   configuration.
 - **The time derivative or the time step** (04, 05): the network is `f` in `dz/dt = f(z)`, or the update
-  `x_{t+1} = x_t + Δt · GNN(x_t)`.
+  `x_{t+1} = x_t + Δt · GNN(x_t)`. WorldParticle (07) narrows this further: a physics predictor takes the step and
+  the network learns only its *residual*.
 - **The solution operator** (06, 07): the network maps an input *function* (coefficients, initial condition,
   geometry) to an output *function*, for any instance and, ideally, any discretization. This is "learning the
   function" in the operator-learning sense.
@@ -116,6 +118,7 @@ compared side by side.
 │   ├── fno/                           code
 │   └── transolver/                    code
 ├── 07-transformers/
+│   └── worldparticle/                 code
 ├── 08-reconstructing-physics/
 ├── 09-one-pde-many-ways/              code (cross-topic)
 └── 10-generative-structure-prediction/
