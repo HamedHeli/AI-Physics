@@ -11,7 +11,7 @@ the unknown material parameters are recovered by fitting a differentiable simula
 | --- | --- | --- | --- |
 | R1 | **[Li+ 2023] PAC-NeRF: Physics Augmented Continuum Neural Radiance Fields for Geometry-Agnostic System Identification.** Xuan Li, Yi-Ling Qiao, Peter Yichen Chen, Krishna Murthy Jatavallabhula, Ming Lin, Chenfanfu Jiang, Chuang Gan | ICLR 2023 | [arXiv:2303.05512](https://arxiv.org/abs/2303.05512) |
 
-Week 10 opens Unit III with readings still TBD; this folder is the place for them when they are announced.
+Week 10 opens Unit III with AlphaFold 3, which has its own folder: [10 Generative structure prediction](../10-generative-structure-prediction/).
 
 ## Key ideas
 

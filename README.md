@@ -25,6 +25,7 @@ flowchart LR
     end
     subgraph U3["Unit III: generative AI"]
         REC["08 Reconstructing physics<br/>PAC-NeRF"]
+        GEN["10 Generative structure prediction<br/>AlphaFold 3"]
     end
     ALL(["09 One PDE, many ways<br/>Burgers solved by every method"])
 
@@ -38,6 +39,9 @@ flowchart LR
     GNN -- "mesh-free message passing → global attention" --> NO
     NO -- "attention-based operators at scale" --> TF
     DS -- "a trained operator as a differentiable surrogate" --> NO
+    GNN -- "edge latents → a dense pair representation" --> GEN
+    TF -- "attention with a pair bias" --> GEN
+    NO -- "learn a function → learn the score of a distribution" --> GEN
 
     click DS "01-differentiable-simulation/" "Differentiable simulation"
     click PINN "02-physics-informed-neural-networks/" "Physics-informed neural networks"
@@ -47,6 +51,7 @@ flowchart LR
     click NO "06-neural-operators/" "Neural operators"
     click TF "07-transformers/" "Transformers"
     click REC "08-reconstructing-physics/" "Reconstructing physics"
+    click GEN "10-generative-structure-prediction/" "Generative structure prediction"
     click ALL "09-one-pde-many-ways/" "One PDE, many ways"
 ```
 
@@ -63,10 +68,11 @@ If the nodes are not clickable in your viewer (GitHub sometimes disables Mermaid
 | 6 | [05 Graph neural networks](05-graph-neural-networks/) | [Sanchez-Gonzalez+ 2020] GNS · [Allen+ 2022] Physical design with learned simulators | [`gnn/`](05-graph-neural-networks/gnn/): GNS on three colliding balls |
 | 7 | [06 Neural operators](06-neural-operators/) | [Li+ 2020] FNO · [Wu+ 2024] Transolver | [`fno/`](06-neural-operators/fno/): FNO on Burgers' equation in 1D and 2D, every tensor visualised · [`transolver/`](06-neural-operators/transolver/): Transolver on a point cloud of an L-shaped plate with a hole |
 | 8 | [07 Transformers](07-transformers/) | [Holzschuh+ 2025] PDE-Transformer | |
+| 10 | [10 Generative structure prediction](10-generative-structure-prediction/) | [Abramson+ 2024] AlphaFold 3 | [`alphafold3/`](10-generative-structure-prediction/alphafold3/): Pairformer + diffusion on a 2D chain with a ligand, against an AF2-style regression head |
 | 11 | [08 Reconstructing physics](08-reconstructing-physics/) | [Li+ 2023] PAC-NeRF | |
 | all | [09 One PDE, many ways](09-one-pde-many-ways/) | cross-topic: 1D viscous Burgers solved with the methods of 01–07 | [`notebooks/`](09-one-pde-many-ways/notebooks/one_pde_many_ways.ipynb): spectral solver, adjoint inverse problems, PINN, POD-Galerkin, latent neural ODE, GNS, FNO and Transolver on the same data, compared |
 
-Week 1 is the course introduction, Weeks 9, 10 and 12 have no paper listed yet ("TBD" or project milestones), and
+Week 1 is the course introduction, Weeks 9 and 12 have no paper listed yet ("TBD" or project milestones), and
 Week 13 is final presentations. The optional textbook is Brunton & Kutz, *Data-Driven Science and Engineering:
 Machine Learning, Dynamical Systems, and Control*.
 
@@ -85,6 +91,8 @@ A useful way to read the graph is to ask, for each paper, *what function the net
 - **The solution operator** (06, 07): the network maps an input *function* (coefficients, initial condition,
   geometry) to an output *function*, for any instance and, ideally, any discretization. This is "learning the
   function" in the operator-learning sense.
+- **The score of a distribution of solutions** (10): AlphaFold 3's diffusion module learns to denoise coordinates,
+  so it *samples* structures from `p(structure | sequence)` instead of mapping a sequence to one structure.
 - **The physics behind observations** (08): the unknowns are material parameters, recovered by fitting a
   differentiable simulator to video.
 
@@ -109,7 +117,9 @@ compared side by side.
 │   └── transolver/                    code
 ├── 07-transformers/
 ├── 08-reconstructing-physics/
-└── 09-one-pde-many-ways/              code (cross-topic)
+├── 09-one-pde-many-ways/              code (cross-topic)
+└── 10-generative-structure-prediction/
+    └── alphafold3/                    code
 ```
 
 Code folders follow the same conventions: pure JAX (or NumPy) with no NN framework, a `src/` package, a
