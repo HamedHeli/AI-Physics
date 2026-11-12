@@ -21,7 +21,7 @@ flowchart LR
     end
     subgraph U2["Unit II: learning all the way"]
         NO["06 Neural operators<br/>FNO · Transolver"]
-        TF["07 Transformers<br/>PDE-Transformer"]
+        TF["07 Transformers<br/>PDE-Transformer · WorldParticle"]
     end
     subgraph U3["Unit III: generative AI"]
         REC["08 Reconstructing physics<br/>PAC-NeRF"]
@@ -36,6 +36,7 @@ flowchart LR
     ODE -- "learned time-stepper" --> GNN
     PINN -- "one solution u(x,t) → the whole solution operator" --> NO
     GNN -- "mesh-free message passing → global attention" --> NO
+    GNN -- "learned particle simulator → transformer corrector" --> TF
     NO -- "attention-based operators at scale" --> TF
     DS -- "a trained operator as a differentiable surrogate" --> NO
 
@@ -62,7 +63,7 @@ If the nodes are not clickable in your viewer (GitHub sometimes disables Mermaid
 | 5 | [04 Neural ODEs](04-neural-odes/) | [Chen+ 2018] Neural ODE · [Wiewel+ 2019] Latent-space physics | |
 | 6 | [05 Graph neural networks](05-graph-neural-networks/) | [Sanchez-Gonzalez+ 2020] GNS · [Allen+ 2022] Physical design with learned simulators | [`gnn/`](05-graph-neural-networks/gnn/): GNS on three colliding balls |
 | 7 | [06 Neural operators](06-neural-operators/) | [Li+ 2020] FNO · [Wu+ 2024] Transolver | [`fno/`](06-neural-operators/fno/): FNO on Burgers' equation in 1D and 2D, every tensor visualised · [`transolver/`](06-neural-operators/transolver/): Transolver on a point cloud of an L-shaped plate with a hole |
-| 8 | [07 Transformers](07-transformers/) | [Holzschuh+ 2025] PDE-Transformer | |
+| 8 | [07 Transformers](07-transformers/) | [Holzschuh+ 2025] PDE-Transformer · [Wang+ 2026] WorldParticle | [`worldparticle/`](07-transformers/worldparticle/): WorldParticle on a 2D jelly and a sand column, token merging and super tokens visualised |
 | 11 | [08 Reconstructing physics](08-reconstructing-physics/) | [Li+ 2023] PAC-NeRF | |
 | all | [09 One PDE, many ways](09-one-pde-many-ways/) | cross-topic: 1D viscous Burgers solved with the methods of 01–07 | [`notebooks/`](09-one-pde-many-ways/notebooks/one_pde_many_ways.ipynb): spectral solver, adjoint inverse problems, PINN, POD-Galerkin, latent neural ODE, GNS, FNO and Transolver on the same data, compared |
 
@@ -81,7 +82,8 @@ A useful way to read the graph is to ask, for each paper, *what function the net
 - **A low-dimensional manifold of solutions** (03): a decoder maps a few latent coordinates to a full field or
   configuration.
 - **The time derivative or the time step** (04, 05): the network is `f` in `dz/dt = f(z)`, or the update
-  `x_{t+1} = x_t + Δt · GNN(x_t)`.
+  `x_{t+1} = x_t + Δt · GNN(x_t)`. WorldParticle (07) narrows this further: a physics predictor takes the step and
+  the network learns only its *residual*.
 - **The solution operator** (06, 07): the network maps an input *function* (coefficients, initial condition,
   geometry) to an output *function*, for any instance and, ideally, any discretization. This is "learning the
   function" in the operator-learning sense.
@@ -108,6 +110,7 @@ compared side by side.
 │   ├── fno/                           code
 │   └── transolver/                    code
 ├── 07-transformers/
+│   └── worldparticle/                 code
 ├── 08-reconstructing-physics/
 └── 09-one-pde-many-ways/              code (cross-topic)
 ```
