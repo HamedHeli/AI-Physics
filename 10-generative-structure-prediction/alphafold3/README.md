@@ -18,6 +18,7 @@ every tensor fits on screen.
 
 [`notebooks/alphafold3_explained.ipynb`](notebooks/alphafold3_explained.ipynb) walks through:
 
+0. the network at a glance: pipeline, every layer as neurons and weights, the blocks, and both algorithms,
 1. the ground-truth energy, eight folding runs of one sequence (several valid structures), and its mirror image
    (same distances, different energy: chirality),
 2. from sequence to the **single** `s (N, 16)` and **pair** `z (N, N, 8)` representations, with one entry computed
@@ -35,6 +36,34 @@ every tensor fits on screen.
 
 The sliders need a running Jupyter kernel (press *Run Interact*). The saved outputs, including a static version of
 the explorer, render on GitHub.
+
+## The network at a glance
+
+Drawn by [`src/diagrams.py`](src/diagrams.py) from `AF3Config`, so they always match the code (section 0 of the
+notebook; the PNGs are in [`figures/`](figures/)).
+
+**The whole pipeline.** The trunk runs once per sequence; the diffusion module is called once per sampling step,
+conditioned on the same `s` and `z`. The dashed head is the AF2-style regression baseline.
+
+![Pipeline with tensor shapes](figures/network_overview.png)
+
+**Every learned map, neuron by neuron** (same style as the GNS notebook). Each one is shared across all tokens or all
+pairs `(i, j)`.
+
+![Every Linear and MLP of the toy AF3](figures/network_layers.png)
+
+**Inside the blocks.** (a) Pairformer block, (b) triangle multiplication, (c) attention with pair bias, (d) the
+diffusion module with EDM preconditioning.
+
+![Pairformer block, triangle multiplication, attention with pair bias, diffusion module](figures/network_blocks.png)
+
+**The two algorithms**, line for line with `training.py`: one training step and the sampler (AF3 Algorithm 18).
+
+![Training step and sampling algorithm](figures/algorithms.png)
+
+What came from where: the pair representation, triangle updates and attention with pair bias are AlphaFold 2's
+(Evoformer → Pairformer); the denoiser, noise schedule, preconditioning and sampler are EDM's (Karras et al., 2022);
+AF2's frames and torsion angles are gone.
 
 ## Results (saved run, 40 unseen sequences)
 
@@ -59,9 +88,11 @@ alphafold3/
 │   ├── model.py       input embedder, Pairformer (triangle multiplication, attention with pair bias),
 │   │                  EDM diffusion module, AF2-style regression head; apply_with_trace returns every tensor
 │   ├── training.py    rigid augmentation and alignment, EDM loss, Adam loop with snapshots, AF3 sampler
+│   ├── diagrams.py    network structure figures: pipeline, every layer, blocks, algorithms
 │   └── visualize.py   molecule drawing, annotated heatmaps, denoising strips
 ├── notebooks/
 │   └── alphafold3_explained.ipynb
+├── figures/           the four structure diagrams as PNGs
 └── requirements.txt
 ```
 
