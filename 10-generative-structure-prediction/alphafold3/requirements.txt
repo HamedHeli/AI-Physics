@@ -1,0 +1,19 @@
+# Toy AlphaFold 3 (Abramson et al., 2024): Pairformer + EDM diffusion on 2D
+# chain-and-ligand "molecules". Everything is pure JAX, like the rest of this repository.
+
+# --- Core: JAX + XLA backend -------------------------------------------------
+# For NVIDIA GPUs, replace with jax[cuda12]; the toy problem runs fine on CPU.
+jax[cpu]>=0.4.30
+jaxlib>=0.4.30
+
+# --- Optimization ------------------------------------------------------------
+optax>=0.2.2
+
+# --- Numerical computing / plotting -------------------------------------------
+numpy>=1.26
+matplotlib>=3.8
+
+# --- Notebook -----------------------------------------------------------------
+# ipywidgets provides the sliders in notebooks/alphafold3_explained.ipynb.
+jupyterlab>=4.0
+ipywidgets>=8.1
